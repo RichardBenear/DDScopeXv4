@@ -142,6 +142,7 @@ class TouchScreen;
 
 // sound control of both duration and frequency
 #define BEEP tone(STATUS_BUZZER_PIN, 2000UL, 50ULL); // both in milliseconds
+#define BLAT tone(STATUS_BUZZER_PIN, 500UL, 100ULL); // both in milliseconds
 #define ALERT tone(STATUS_BUZZER_PIN, 2500UL, 200ULL); // both in milliseconds
 
 enum ScreenEnum

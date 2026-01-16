@@ -393,9 +393,16 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
   y_offset +=SPEED_BOXSIZE_Y + 2;
   if (py > SPEED_Y + y_offset && py < (SPEED_Y + y_offset + SPEED_BOXSIZE_Y) && px > SPEED_X && px < (SPEED_X + SPEED_BOXSIZE_X))
   {
+    // Require a known zero reference
+    if (!isZeroed) {
+      BLAT;
+      return true; // consume touch
+    }
+
     BEEP;
-    setPointTarget = focPosition;
-    setPoint = true;
+    setPointTarget  = focPosition;
+    setPointValid   = true;
+    setPoint        = true;
     return true;
   }
 
@@ -403,9 +410,21 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
   y_offset +=SPEED_BOXSIZE_Y + 2;
   if (py > SPEED_Y + y_offset && py < (SPEED_Y + y_offset + SPEED_BOXSIZE_Y) && px > SPEED_X && px < (SPEED_X + SPEED_BOXSIZE_X))
   {
+    // Must be zeroed and have a setpoint captured
+    if (!isZeroed || !setPointValid) {
+      BLAT;
+      return true; // consume touch
+    }
+
+    // If you know max, clamp to [min,max] to avoid runaway
+    int tgt = setPointTarget;
+    if (isMaxKnown) {
+      if (tgt < focMinPosition) tgt = focMinPosition;
+      if (tgt > focMaxPosition) tgt = focMaxPosition;
+    }
     BEEP;
-    focTarget = setPointTarget;
-    gotoSetpoint = true; 
+    focTarget     = tgt;
+    gotoSetpoint  = true;
     focGoToActive = true;
     return true;
   }
@@ -414,9 +433,14 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
   y_offset +=SPEED_BOXSIZE_Y + 2;
   if (py > SPEED_Y + y_offset && py < (SPEED_Y + y_offset + SPEED_BOXSIZE_Y) && px > SPEED_X && px < (SPEED_X + SPEED_BOXSIZE_X))
   {
+    // Need a valid min reference and a known max to define halfway
+    if (!isZeroed || !isMaxKnown) {
+      BLAT;
+      return true; // consume touch
+    }
     BEEP;
-    focTarget = (focMaxPosition - focMinPosition) / 2;
-    focGoToHalf = true;
+    focTarget     = focMinPosition + (focMaxPosition - focMinPosition) / 2;
+    focGoToHalf   = true;
     focGoToActive = true;
     return true;
   }
@@ -442,6 +466,7 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
         focMinPosition = 0;
         focPosition = 0;
         inwardCalState = false;
+        isZeroed = true;
       }
     } else { // now go out and calibrate max position
       if (!focGoToActive) { // then we are starting OUT MAX calibration
@@ -452,6 +477,7 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
       } else { // then we have been told to stop move OUT and are at Maximum
         focGoToActive = false;
         focMaxPosition = focPosition;
+        isMaxKnown = true;
         inwardCalState = true; // reset this in case want to calibrate again
         calibActive = false;
       }
@@ -478,7 +504,7 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
   {
     BEEP;
     focMoveDistance -= MTR_PWR_INC_SIZE;
-    if (focMoveDistance < 0) focMoveDistance = 5;
+    if (focMoveDistance < 5) focMoveDistance = 5; // minimum jog size is 5
     incMoveCt = false;
     decMoveCt = true;
     return true;
@@ -492,6 +518,7 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
     focMinPosition = 0;
     focPosition = 0;
     setZero = true;
+    isZeroed = true;
     return true;
   }
 
@@ -501,6 +528,7 @@ bool DCFocuserScreen::touchPoll(uint16_t px, uint16_t py)
   {
     BEEP;
     focMaxPosition = focPosition;
+    isMaxKnown = isZeroed;
     setMax = true;
     return true;
   }

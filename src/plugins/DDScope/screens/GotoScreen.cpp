@@ -415,8 +415,8 @@ bool GotoScreen::touchPoll(uint16_t px, uint16_t py) {
     ALERT;
     abortPgBut = true;
     commandBool(":Q#"); // stops move
-    digitalWrite(AZ_ENABLED_LED_PIN, HIGH); // Turn Off AZM LED
-    digitalWrite(ALT_ENABLED_LED_PIN, HIGH); // Turn Off ALT LED
+    //digitalWrite(AZ_ENABLED_LED_PIN, HIGH); // Turn Off AZM LED
+    //digitalWrite(ALT_ENABLED_LED_PIN, HIGH); // Turn Off ALT LED
     return true;
   }
 

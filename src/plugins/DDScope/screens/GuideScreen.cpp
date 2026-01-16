@@ -464,9 +464,9 @@ bool GuideScreen::touchPoll(uint16_t px, uint16_t py) {
     if (py > STOP_Y && py < (STOP_Y + STOP_BOXSIZE_Y) && px > STOP_X && px < (STOP_X + STOP_BOXSIZE_X)) {
       ALERT;
         commandBlind(":Q#");
-        digitalWrite(AZ_ENABLED_LED_PIN, HIGH); // Turn Off AZM LED
+        //digitalWrite(AZ_ENABLED_LED_PIN, HIGH); // Turn Off AZM LED
         //axis1.enable(false);
-        digitalWrite(ALT_ENABLED_LED_PIN, HIGH); // Turn Off ALT LED
+        //digitalWrite(ALT_ENABLED_LED_PIN, HIGH); // Turn Off ALT LED
         //axis2.enable(false);
         //commandBool(":Td#"); // Disable Tracking
         
