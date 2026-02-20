@@ -33,6 +33,10 @@ The PC Board schematic and PCB design were done in ``KiCad``.
 
 It is possible to use the DDScope User Interface (UI) Screens on other hardware platforms by changing ``ODRIVE`` in ``#define AXIS1_DRIVER_MODEL ODRIVE`` in ``Config.h`` to whatever motor drive model you may be using. This should disable all ODrive specific code.
 
+## FW Architecture
+
+<img src="https://raw.githubusercontent.com/RichardBenear/DDScopeX_Documents/main/DDScopeXFwArch.jpg" width="500" alt="DDScope FW Architecture">
+
 ## DDScopeX specific files
 
 These are listed to provide clarity of where the specific files are located for DDScopeX since not all of them are under the ``plugins`` directory.
@@ -154,7 +158,7 @@ DDScopeX provides 17 (touch)screens that support the functions of OnStepX and th
 
 ### Other DDScope features
 
-* Slew rate of 7 deg/sec. Trapezoidal move profile.
+* Slew rate of 7-14 deg/sec. Trapezoidal move profile.
 * The ability to store favorite objects from any catalog (except planets) to a Custom User Catalog on micro SD card
 * Above Horizon filter for catalogs. All Sky Align Filter for Star Catalog.
 * Display of target coordinates and real time updates of slewing coordinates
@@ -167,19 +171,20 @@ DDScopeX provides 17 (touch)screens that support the functions of OnStepX and th
 
 ## Other Documentation
 
-* **DDScopeX:** In process...will include PC Board, motor construction, and mount construction instructions.
+* **DDScopeX:** See other DDScopeX Repos for Hardware, Mechanical, and Documentation
 * **OnStepX:** Detailed documentation, including the full set of features, detailed designs for PCBs, instructions on how to build a controller, how to configure the firmware for your particular mount, can all be found the [OnStep Group Wiki](https://groups.io/g/onstep/wiki/home).
 
 ## Change Log
 
-* **DDScopeX** changes: Once released, versioning will take place.
+* **DDScopeX** changes: Versioning is done on local machine. Only the latest is posted on the repo.
 * **OnStepX** changes: All the changes are tracked in git, and a detailed list can be accessed using the following git command:  
         _git log --date=short --pretty=format:"%h %ad %<(20)%an %<(150,trunc)%s"_
 
 ## Support
 
-* DDScopeX specific: To be determined...  
-* OnStepX specific: questions and discussion should be on the mailing list (also accessible via the web) at the [OnStep Group](https://groups.io/g/onstep/).
+* DDScopeX specific: Use the Discussions in GitHub: [Discussions](https://github.com/RichardBenear/DDScopeXv4/discussions) 
+* ODrive: I belong to the ODrive Discussion group so will see questions.
+* OnStepX specific: questions and discussion should be on the mailing list (also accessible via the web) at the [OnStep Group](https://groups.io/g/onstep/). I am a member of the Developers subgroup.
 
 ## License
 
@@ -189,18 +194,40 @@ See [LICENSE.txt](./LICENSE.txt) file.
 ## Images
 
 ### Screens (Pages)
+Each Screen can be viewed in a higher resolution format in the DDScopeXv4/ScreenImages2.0 location.
 
-This composite picture (collage) shows all 17 screens contained in DDScopeX. The picture quality is not the best because the camera picks up and overempasizes the glow at top and bottom of screen. The pictures have been post processed to try and remove the glow, but this tends to darken them. The screens actually look much better when viewed live.
+<img src="https://raw.githubusercontent.com/RichardBenear/DDScopeX_Documents/main/ScreenImagesMosaic.jpg" width="600">
 
-The Rasperry Pi TFT LCD does not have SPI read capability so it was not possible to do a
-screen dump (using some custom code) to a bitmap (.bmp) file. This would have been the ideal way to get a true color representation of the Screens.
 
-![Menu Screens](DDScopeX_Screens.jpg)
+### DDScopeX Pictures
 
-### DDScopeX Picture
-
-![DDScope Picture](DDScope.png)
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/RichardBenear/DDScopeX_Documents/main/DDScopeXImageControllerSide.jpg" width="350"><br>
+      <b>Controller Side</b><br>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/RichardBenear/DDScopeX_Documents/main/DDScopeXImageMotorSide.jpg" width="350"><br>
+      <b>Motor Side</b><br>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="height: 20px;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/RichardBenear/DDScopeX_Documents/main/DDScopeXImageWheels.jpg" width="350"><br>
+      <b>DDScope on Wheels</b><br>
+      <i>The full assembly showing the mobility base.</i>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/RichardBenear/DDScopeX_Documents/main/DDScopeX_CAD_ImageBaffles.jpg" width="350"><br>
+      <b>CAD Design: With the Light Baffles</b><br>
+    </td>
+  </tr>
+</table>
 
 ### DDScopeX Video
 
-[ to be done ]
+[ TBD ]
