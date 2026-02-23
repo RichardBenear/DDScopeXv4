@@ -13,3 +13,5 @@ Thumbs.db
 *.map
 *.o
 *.d
+
+doxygen/

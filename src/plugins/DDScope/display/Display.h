@@ -145,6 +145,12 @@ class TouchScreen;
 #define BLAT tone(STATUS_BUZZER_PIN, 500UL, 100ULL); // both in milliseconds
 #define ALERT tone(STATUS_BUZZER_PIN, 2500UL, 200ULL); // both in milliseconds
 
+#define MOTOR_CURRENT_WARNING    2.0 // Warning when over 2 amps....coil heating occuring
+#define ALT_MOTOR_CURRENT_MAX    4.0 // Currents over this for extended periods will damage motors
+#define AZM_MOTOR_CURRENT_MAX    4.0
+#define MAX_MOTOR_TEMP           110 // Deg F
+#define MOTOR_FAULT_SAMPLES_REQUIRED 4 // How many consecutive "bad" samples required before shutdown
+
 enum ScreenEnum
 {
   HOME_SCREEN,     // 0
@@ -224,6 +230,7 @@ class Display {
     void updateCommonStatus();  
     void showOnStepCmdErr();
     void showOnStepGenErr();
+    void checkMotors();
 
     #ifdef ODRIVE_MOTOR_PRESENT
       void showGpsStatus();

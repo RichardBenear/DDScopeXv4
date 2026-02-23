@@ -75,7 +75,6 @@
 #define L_GE_NV_INIT "Init NV/EEPROM error"
 #define L_GE_OTHER "Unknown Error, code"
 
-
 // Menu button object
 Button menuButton(MENU_X, MENU_Y, MENU_BOXSIZE_X, MENU_BOXSIZE_Y, butOnBackground, butBackground, butOutline, largeFontWidth, largeFontHeight, "");
 
@@ -313,6 +312,7 @@ void Display::updateSpecificScreen() {
   showOnStepGenErr(); 
   showOnStepCmdErr(); 
   updateBatVoltage(1);
+  checkMotors();
   
 #ifdef ENABLE_TFT_MIRROR
   wifiDisplay.enableScreenCapture(false);
@@ -391,6 +391,13 @@ void Display::updateBatVoltage(int axis) {
   previousBatVoltage = currentBatVoltage;
 }
 
+static inline void shutDownMotors() {
+  BLAT;
+  commandBlind(":Q#"); // stops move
+  axis1.enable(false); // turn off Motor1
+  axis2.enable(false); // turn off Motor2
+}
+
 // Define a Hidden Motors OFF button
 // Hidden button is GPS ICON area and will turn off current to both Motors
 // This hidden area is on ALL screens for Saftey in case of mount collision
@@ -398,10 +405,47 @@ void Display::motorsOff(uint16_t px, uint16_t py) {
   if (py > ABORT_Y && py < (ABORT_Y + ABORT_BOXSIZE_Y) && px > ABORT_X && px < (ABORT_X + ABORT_BOXSIZE_X)) {
     ALERT;
     soundFreq(1500, 200);
-    commandBlind(":Q#"); // stops move
-    axis1.enable(false); // turn off Motor1
-    axis2.enable(false); // turn off Motor2
-    commandBool(":Td#"); // Disable Tracking
+    shutDownMotors();
+  }
+}
+
+// Persist across calls (task runs ~1 Hz)
+static uint8_t altFaultCount = MOTOR_FAULT_SAMPLES_REQUIRED;
+static uint8_t azmFaultCount = MOTOR_FAULT_SAMPLES_REQUIRED;
+
+// check the motors for extreme current or temperature, if so, shut down
+void Display::checkMotors() {
+
+  // -------- ALT motor --------
+  bool altOverCurrent = (abs(oDriveExt.getMotorCurrent(ALT_MOTOR)) > ALT_MOTOR_CURRENT_MAX);
+  bool altOverTemp    = (oDriveExt.getMotorTemp(ALT_MOTOR) >= MAX_MOTOR_TEMP);
+  bool altFault       = (altOverCurrent || altOverTemp);
+
+  if (altFault) {
+    if (altFaultCount < 255) altFaultCount++;
+  } else {
+    altFaultCount = 0;
+  }
+
+  if (altFaultCount >= MOTOR_FAULT_SAMPLES_REQUIRED) {
+    shutDownMotors();
+    return; // already shut down; no need to keep checking
+  }
+
+  // -------- AZM motor --------
+  bool azmOverCurrent = (abs(oDriveExt.getMotorCurrent(AZM_MOTOR)) > AZM_MOTOR_CURRENT_MAX);
+  bool azmOverTemp    = (oDriveExt.getMotorTemp(AZM_MOTOR) >= MAX_MOTOR_TEMP);
+  bool azmFault       = (azmOverCurrent || azmOverTemp);
+
+  if (azmFault) {
+    if (azmFaultCount < 255) azmFaultCount++;
+  } else {
+    azmFaultCount = 0;
+  }
+
+  if (azmFaultCount >= MOTOR_FAULT_SAMPLES_REQUIRED) {
+    shutDownMotors();
+    return;
   }
 }
 

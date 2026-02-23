@@ -44,9 +44,6 @@
 #define ACTION_X_SPACING         7
 #define ACTION_Y_SPACING         4
 
-#define MOTOR_CURRENT_WARNING    2.0 // Warning when over 2 amps....coil heating occuring
-#define MAX_MOTOR_TEMP           110 // Deg F
-
 // ------------ Page Drawing Support ----------------
 // Modify the following strings to customize the Home Screen
 // Column 1 Status strings
@@ -229,6 +226,7 @@ void HomeScreen::updateHomeStatus() {
   
   if (abs(currentAZMotorCur) > MOTOR_CURRENT_WARNING) { // change background color...Warning!
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentAZMotorCur, true);
+    BLAT;
   } else {
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentAZMotorCur, false);
   }
@@ -242,8 +240,9 @@ void HomeScreen::updateHomeStatus() {
     currentALTMotorCur = 0; // define this for non ODrive implementations
   #endif
 
-  if (abs(currentALTMotorCur) > MOTOR_CURRENT_WARNING) {
+  if (abs(currentALTMotorCur) > MOTOR_CURRENT_WARNING) { // change background color...Warning!
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentALTMotorCur, true);
+    BLAT;
   } else {
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentALTMotorCur, false);
   }
@@ -258,6 +257,7 @@ void HomeScreen::updateHomeStatus() {
   
   if (currentAZMotorTemp >= MAX_MOTOR_TEMP) { // make box red
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentAZMotorTemp, true);
+    BLAT;
   } else {
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentAZMotorTemp, false);
   }
@@ -272,6 +272,7 @@ void HomeScreen::updateHomeStatus() {
 
   if (currentALTMotorTemp >= MAX_MOTOR_TEMP) { // make box red
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentALTMotorTemp, true);
+    BLAT;
   } else {
     canvHomeInsPrint.printRJ(COL2_DATA_X, COL2_DATA_Y+y_offset, C_WIDTH-bitmap_width_sub, C_HEIGHT, currentALTMotorTemp, false);
   }
@@ -496,8 +497,10 @@ bool HomeScreen::touchPoll(int16_t px, int16_t py) {
   if (px > ACTION_COL_2_X && px < ACTION_COL_2_X + ACTION_BOXSIZE_X && py > ACTION_COL_2_Y + y_offset && py <  ACTION_COL_2_Y + y_offset + ACTION_BOXSIZE_Y) {
     BEEP;
     _oDriveDriver->SetPosition(0, 0.0);
+    delay(10); // giving the ODrive command interface some time to process
     _oDriveDriver->SetPosition(1, 0.0);
-    commandBlind(":hF#"); // home Reset
+    delay(10);
+    commandBlind(":hF#"); // home Reset - sets home here
     resetHome = true;
     return true;
   }
