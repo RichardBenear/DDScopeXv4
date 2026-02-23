@@ -174,9 +174,15 @@ DDScopeX provides 17 (touch)screens that support the functions of OnStepX and th
 * **DDScopeX:** See other DDScopeX Repos for Hardware, Mechanical, and Documentation
 * **OnStepX:** Detailed documentation, including the full set of features, detailed designs for PCBs, instructions on how to build a controller, how to configure the firmware for your particular mount, can all be found the [OnStep Group Wiki](https://groups.io/g/onstep/wiki/home).
 
+## Book: BUILD A DIRECT DRIVE TELESCOPE: A Comprehensive Guide
+Book Available on Amazon [Here](https://a.co/d/0cUrQWGB) 
+
+<img src="./DDScopeXBookFront.jpg" width="300" alt="DDScopeX Book Front">
+
+
 ## Change Log
 
-* **DDScopeX** changes: Versioning is done on local machine. Only the latest is posted on the repo.
+* **DDScopeX** changes: Versioning is done on a local machine. Only the latest is posted on the repo.
 * **OnStepX** changes: All the changes are tracked in git, and a detailed list can be accessed using the following git command:  
         _git log --date=short --pretty=format:"%h %ad %<(20)%an %<(150,trunc)%s"_
 
